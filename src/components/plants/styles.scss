@@ -1,0 +1,13 @@
+.plant-container {
+ display: flex;
+}
+
+.plant-card {
+  max-height: 500px;
+  max-width: 500px;
+
+  img {
+    height: 50%;
+    width: 50%;
+  }
+}

@@ -1,0 +1,1 @@
+export const selectPlantById = (state, id) => state.plantStore.plants.find(p => p.id === id);

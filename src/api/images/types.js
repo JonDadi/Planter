@@ -1,0 +1,11 @@
+export const GET_IMAGE = {
+    REQUEST: `GET_IMAGE`,
+    SUCCESS: `GET_IMAGE_SUCCESS`,
+    ERROR: `GET_IMAGE_ERROR`
+};
+
+export const POST_IMAGE = {
+    REQUEST: `POST_IMAGE`,
+    SUCCESS: `POST_IMAGE_SUCCESS`,
+    ERROR: `POST_IMAGE_ERROR`
+};
