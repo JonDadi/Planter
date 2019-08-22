@@ -27,7 +27,7 @@ class PlantForm extends Component {
 
     this.props.postPlant({
       ...this.state.values,
-      imageId: this.state.imageId,
+      images: this.state.images,
     });
 
     this.props.history.push('/');

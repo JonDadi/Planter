@@ -23,17 +23,40 @@ const spinners = [
 ]
 
 export class PlantCard extends Component {
-  
-  componentDidMount() {
-    const { imageId } = this.props.plant;
+  constructor(props) {
+    super(props)
 
-    this.props.getImage(imageId);
+    this.state = {
+      thumbnail: null,
+    }
+  }
+
+
+  componentDidMount() {
+    const { images } = this.props.plant;
+    const allImages = this.props.images;
+    let isLoaded = false;
+
+    for (const imageId in images){   
+      console.log("í for", images[imageId].item1)
+      
+
+      isLoaded = allImages.has(images[imageId].item1);
+      if (!isLoaded) this.props.getImage(images[imageId].item1);
+    }
+
+    const thumbnail = images[Math.floor(Math.random()*images.length)].item1;
+
+    this.setState({
+      thumbnail,
+    })
+
   }
 
   render() {
     const { plant, onClick, images, isLoading } = this.props;
-    const image = images.get(plant.imageId);
-
+    const { thumbnail } = this.state;
+    const image = images.get(thumbnail);
     return (
       
       <div className='card mt-5 shadow' style={ {width: '22rem'} }>
@@ -55,6 +78,7 @@ export class PlantCard extends Component {
 
 const mapStateToProps = (state) => {
     const { images, isLoading } = state.imageStore;
+
     return {
       images,
       isLoading,

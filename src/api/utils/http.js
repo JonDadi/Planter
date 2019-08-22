@@ -16,6 +16,7 @@ export const GET = (endpoint) => {
 }
 
 export const POST = (endpoint, payload) => {
+    console.log("payload í post", payload);
     return axios.post(apiUrl + endpoint, payload)
 };
 

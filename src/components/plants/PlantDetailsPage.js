@@ -18,6 +18,11 @@ class PlantDetailsPage extends Component {
     this.state = { plant: this.props.plants.find(p => p.id == id), }
     this.btnBackClick = this.btnBackClick.bind(this);
     this.btnRegisterProduce = this.btnRegisterProduce.bind(this);
+    this.getImages = this.getImages.bind(this);
+  }
+
+  getImages() {
+    const { images } = this.props;
   }
 
   componentDidMount() {
@@ -33,14 +38,23 @@ class PlantDetailsPage extends Component {
   }
 
   render () {
+
+    
     console.log(this.state);
     const { plant } = this.state;
-    const image = this.props.images.get(plant.imageId);
+    
+    if(!plant) return <h1>Loading...</h1>
+    const { images } = plant;
+    const thumbnail = images[Math.floor(Math.random()*images.length)].item1;
+    const image = this.props.images.get(thumbnail);
+
     return (
       <div className="rounded box-shadow my-3 p-3 container bg-white">
-
+        
         <img src={image} alt='plant' className="card-img-top" /> 
-
+        <p>{plant.name}</p>
+        <p>{plant.description}</p>
+        <p>{plant.planted}</p>
         <button className="btn btn-primary mr-2" onClick={this.btnBackClick}>Til baka</button>
         <button className="btn btn-primary" onClick={this.btnRegisterProduce}>Skrá uppskeru</button>
       </div>
@@ -50,7 +64,7 @@ class PlantDetailsPage extends Component {
 
 const mapStateToProps = (state) => {
   const { plants } = state.plantStore;
-  const selectedPlant = selectPlantById(state, 1);
+  const selectedPlant = selectPlantById(state, 64);
   return {
     plants,
     plant: selectedPlant,

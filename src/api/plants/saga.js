@@ -13,18 +13,22 @@ function* fetchPlants() {
 }
 
 function* postPlant({ payload }) {
-  const { name, description, datePlanted, location, images, imageId } = payload;
-  const params = { name, description, datePlanted, locationId: location, imageId };
+  const { name, description, datePlanted, location, images } = payload;
+  const params = {
+     name, 
+     description, 
+     datePlanted, 
+     locationId: 
+     location, 
+     imageIds: [...images.keys()],
+  };
   try {
+    for(const [key, value] of images) {
+      yield call(POST_IMAGE, `images`, { image: value.image, imageId: key })
+    }
 
+    const response = yield call(POST, 'plants', params);
 
-    images.forEach(i => {
-      const test = yield call(POST_IMAGE, `images`, { image: i, imageId })
-    })
-    console.log("testerinn", test);
-    const response = yield call(POST, 'plants', payload);
-    console.log("respons", response);
-    
     yield put({type: POST_PLANT.SUCCESS, data: response.data})
     
   } catch (e){
