@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom'
-import moment from 'moment';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/styles';
 
 import { getPlants } from '../../api/plants/actions';
 import PlantCard from './PlantCard';
@@ -19,15 +19,13 @@ class PlantPage extends Component {
     const { plants } = this.props;
 
     return (
-      <div className="container">
-        <div className="row">
+      <Grid container justify="center" spacing={6} style={{marginTop: 20}}> 
         { plants.map(p => 
-          <div className="col" key={p.id}>
+          <Grid item key={p.id}>
             <PlantCard plant={p} onClick={this.onPlantClick.bind(this)} />
-          </div>
+          </Grid>
         )}
-        </div>
-      </div>
+      </Grid>
     )
   }
 }

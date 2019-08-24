@@ -1,5 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
 import moment from 'moment';
 import { connect } from 'react-redux'
 import cactusSpinner from '../../img/cactusSpinner.svg';
@@ -11,6 +19,7 @@ import pottingSpinner from '../../img/pottingSpinner.svg';
 import leafSpinner from '../../img/leafSpinner.svg';
 import { getImage } from '../../api/images/actions';
 import './styles.scss';
+import { maxWidth } from '@material-ui/system';
 
 const spinners = [
   cactusSpinner,
@@ -38,9 +47,6 @@ export class PlantCard extends Component {
     let isLoaded = false;
 
     for (const imageId in images){   
-      console.log("í for", images[imageId].item1)
-      
-
       isLoaded = allImages.has(images[imageId].item1);
       if (!isLoaded) this.props.getImage(images[imageId].item1);
     }
@@ -59,19 +65,39 @@ export class PlantCard extends Component {
     const image = images.get(thumbnail);
     return (
       
-      <div className='card mt-5 shadow' style={ {width: '22rem'} }>
-        <div className="card-body">
-          { image ? 
-            <img src={image} alt='plant' className="card-img-top" /> : 
-            <img src={spinners[Math.floor(Math.random()*spinners.length)]} className="card-img-top"/>
-          }
-          <h5 className="card-title">{plant.name}</h5>
-          <p>{plant.description}</p>
-          <p>{moment(plant.datePlanted).format('LL')}</p>
+      <Card style={{maxWidth: 330}}>
+        <CardActionArea onClick={() => onClick(plant.id)}>
+          {image && (
+            <CardMedia
+              image={image}
+              component="img"  
+            />
+          )}
           
-          <button className="btn btn-primary" onClick={evt => onClick(plant.id)}>Nánar</button>
-        </div>
-      </div>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {plant.name}
+            </Typography>
+            <Typography variant="body1" color="textSecondary" component="p">
+              {moment(plant.datePlanted).format('LL')}
+            </Typography>
+            <Typography variant="body1" color="textSecondary" component="p">
+              {plant.description}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <Button color="primary" onClick={evt => console.log("vökva, TODO")}>
+            Vökva
+          </Button>
+          <Button color="primary" onClick={evt => console.log("vökva, TODO")}>
+            Ný mynd
+          </Button>
+          <Button color="primary" onClick={evt => console.log("vökva, TODO")}>
+            Skrá uppskeru
+          </Button>
+        </CardActions>
+      </Card>
     )
   }
 }
