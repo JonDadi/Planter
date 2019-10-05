@@ -9,10 +9,10 @@ export class CreateEditPlantPage extends Component {
     return (
       <div className="px-auto">
         <div className="row ">
-          <div className="col-lg-6 col-md-12 mx-auto">
+          <div className="col-md-6 col-s-12 mx-auto">
             <div className="card p-3 m-3">
-              <div className="card-body">
-                <h5 className="card-title mb-4"> Ný planta </h5>
+              <div className="card-body text-center">
+                <h5 className="card-title mb-2 "> Ný planta </h5>
                 <PlantForm history={this.props.history} />
               </div>
             </div>

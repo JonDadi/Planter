@@ -40,18 +40,17 @@ export class PlantCard extends Component {
     }
   }
 
-
   componentDidMount() {
     const { images } = this.props.plant;
     const allImages = this.props.images;
-    let isLoaded = false;
 
-    for (const imageId in images){   
-      isLoaded = allImages.has(images[imageId].item1);
+    let isLoaded = false;
+    for (const imageId in images) {
       if (!isLoaded) this.props.getImage(images[imageId].item1);
     }
 
-    const thumbnail = images[Math.floor(Math.random()*images.length)].item1;
+    const thumbnail = images[Math.floor(Math.random()*images.length)] ?
+                      images[Math.floor(Math.random()*images.length)].item1 : null;
 
     this.setState({
       thumbnail,
@@ -60,20 +59,20 @@ export class PlantCard extends Component {
   }
 
   render() {
-    const { plant, onClick, images, isLoading } = this.props;
+    const { plant, onClick, onWateringClick, images, isLoading } = this.props;
     const { thumbnail } = this.state;
-    const image = images.get(thumbnail);
+    const image = thumbnail ? images[thumbnail]: sproutSpinner;
     return (
-      
       <Card style={{maxWidth: 330}}>
         <CardActionArea onClick={() => onClick(plant.id)}>
           {image && (
             <CardMedia
               image={image}
-              component="img"  
+              component="img"
+              className="img-fluid"
+              style={{maxHeight: 300, objectFit: 'fill'}} 
             />
           )}
-          
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {plant.name}
@@ -87,7 +86,7 @@ export class PlantCard extends Component {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button color="primary" onClick={evt => console.log("vökva, TODO")}>
+          <Button color="primary" onClick={evt => onWateringClick(plant.id)}>
             Vökva
           </Button>
           <Button color="primary" onClick={evt => console.log("vökva, TODO")}>

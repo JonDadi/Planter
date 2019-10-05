@@ -1,0 +1,1 @@
+export const getWateringsByPlantId = (state, id) => state.wateringStore.waterings.filter(w => w.plantId === id);

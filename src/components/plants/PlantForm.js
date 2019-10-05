@@ -1,34 +1,46 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import uuid from 'uuid';
+import { withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { postPlant } from '../../api/plants/actions'
 import ImageSelector from '../image/ImageSelector';
 import { Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import moment from 'moment';
+import MomentUtils from '@date-io/moment';
 
-const styles = theme => ({
+const styles = {
   container: {
     display: 'flex',
     flexWrap: 'wrap',
   },
+  subContainer: {
+    textAlign: 'center',
+    width: '100%',
+  },
   textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
+    width: '100%',
   },
-  dense: {
-    marginTop: 19,
+  imageContainer: {
+    marginTop: 30,
+    width: '100%',
   },
-  menu: {
-    width: 200,
+  datePicker: {
+    width: '100%',
   },
-});
+  typesSelect: {
+    width: '100%',
+  },
+  submitButton: {
+    marginLeft: 10,
+  }
+};
 
 class PlantForm extends Component {
   constructor(props) {
@@ -65,7 +77,7 @@ class PlantForm extends Component {
     const newImages = files;
     const copy = new Map(images);
 
-    for(var i = 0; i < newImages.length; i++) {
+    for (var i = 0; i < newImages.length; i++) {
       const imageType = newImages[i].name.substring(newImages[i].name.indexOf('.'));
       const id = uuid() + imageType;
       const url = URL.createObjectURL(newImages[i])
@@ -85,7 +97,6 @@ class PlantForm extends Component {
   }
 
   changeDate(date) {
-    console.log(date);
     const { values } = this.state;
     values['date'] = date.toISOString();
     this.setState({
@@ -106,86 +117,102 @@ class PlantForm extends Component {
   }
 
   render() {
+    console.log(MomentUtils);
+    const { classes } = this.props;
     const imageArray = [...this.state.images.values()];
-    const pickedDate = this.state.values['date'];
+    const pickedDate = this.state.values['date'] || moment();
     const pickedType = this.state.values['type'];
-    console.log(this.state);
     return (
-      <form autoComplete="off">
-        <TextField
-          id="name"
-          label="Nafn"
-          onChange={this.changeValue}
-          margin="normal"
-        />
-        <br />
-        <TextField
-          id="description"
-          label="Lýsing"
-          onChange={this.changeValue}
-          margin="normal"
-        />
-        <br />
-        <TextField
-          id="location"
-          label="Staðsetning"
-          onChange={this.changeValue}
-          margin="normal"
-        />
-        <br />
-        <KeyboardDatePicker
-          disableToolbar
-          variant="inline"
-          format="DD/mm/yyyy"
-          margin="normal"
-          id="datePlanted"
-          label="Dagsetning"
-          onChange={this.changeDate}
-          value={pickedDate}
-          KeyboardButtonProps={{
-            'aria-label': 'Plöntunar dagsetning',
-          }}
-        />
-        <br />
-      <FormControl style={{width: 250}}>
-        <InputLabel htmlFor="type">Tegund</InputLabel>
-        <Select
-          value={1}
-          onChange={this.handleChange}
-          inputProps={{
-            name: 'type',
-            id: 'type',
-          }}
-        >
-          <MenuItem value={10}>Tómatar</MenuItem>
-          <MenuItem value={20}>Jarðaber</MenuItem>
-          <MenuItem value={30}>Basil</MenuItem>
-        </Select>
-      </FormControl>
-      <br />
-      <br />
-      <Typography>Myndir</Typography>
-      <ImageSelector onChange={this.changeImage} name="image"></ImageSelector>
-      <div className="row">
-        {
-          // TODO: Vantar að búa til component fyrir þetta drasl
-          imageArray.map(i => {
-          return (
-            <div className="col-sm-12 col-md-6 col-lg-4" key={i.url}>
-              <img src={i.url} className={"img-fluid mb-1"}/>
-            </div>
-            )
-          })
-        }
-      </div>
-      <br />
-      <Button variant="contained" color="secondary" onClick={this.handleCancel} style={{marginRight: 10}}>
-        Hætta við
-      </Button>
-      <Button variant="contained" color="primary" onClick={this.handleSubmit}>
-        Vista
-      </Button>
-    </form>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>    
+          <TextField
+            id="name"
+            label="Nafn"
+            onChange={this.changeValue}
+            margin="normal"
+            className={classes.textField}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            id="description"
+            label="Lýsing"
+            onChange={this.changeValue}
+            margin="normal"
+            className={classes.textField}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            id="location"
+            label="Staðsetning"
+            onChange={this.changeValue}
+            margin="normal"
+            className={classes.textField}
+          />  
+        </Grid>
+        <Grid item xs={12}>
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/DD/YYYY"
+                margin="normal"
+                id="datePlanted"
+                label="Dagsetning"
+                onChange={this.changeDate}
+                value={pickedDate}
+                className={classes.datePicker}
+                KeyboardButtonProps={{
+                  'aria-label': 'Plöntunar dagsetning',
+                }}
+              />
+            </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid item xs={12}>
+          <InputLabel htmlFor="type" className="float-left">Tegund</InputLabel>
+          <Select
+            value={1}
+            className={classes.typesSelect}
+            onChange={this.handleChange}
+            inputProps={{
+              name: 'type',
+              id: 'type',
+            }}
+          >
+            <MenuItem value={10}>Tómatar</MenuItem>
+            <MenuItem value={20}>Jarðaber</MenuItem>
+            <MenuItem value={30}>Basil</MenuItem>
+          </Select>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography>Myndir</Typography>
+          <ImageSelector onChange={this.changeImage} name="image"></ImageSelector>
+        </Grid>
+        <Grid item xs={12}>
+            <Grid container>
+              {
+                // TODO: Vantar að búa til component fyrir þetta drasl
+                imageArray.map(i => {
+                return (
+                  <Grid item xs={12} md={6} xl={3} key={i.id}>
+                    <img src={i.url} className={"img-fluid mb-1 p-2"} style={{maxHeight: 400}}/>
+                  </Grid>
+                  )
+                })
+              }
+            </Grid>
+      </Grid>
+      <Grid container justify="center">
+          <Button variant="contained" color="secondary" onClick={this.handleCancel}>
+            Hætta við
+          </Button>
+
+          <Button variant="contained" color="primary" className={classes.submitButton} onClick={this.handleSubmit}>
+            Vista
+          </Button>
+      </Grid>
+    </Grid>
     )
   }
 }
@@ -203,4 +230,4 @@ export default connect(
     getPlants: null,
     postPlant: postPlant.request,
   },
-)(PlantForm)
+)(withStyles(styles)(PlantForm))

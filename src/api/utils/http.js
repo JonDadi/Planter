@@ -8,6 +8,7 @@ export const GET = (endpoint) => {
         return axios.get(apiUrl + endpoint, {
             responseType: 'blob',
             timeout: 30000,
+            headers: {'Access-Control-Allow-Origin': '*'},
           });
     } else {
         return axios.get(apiUrl + endpoint)
